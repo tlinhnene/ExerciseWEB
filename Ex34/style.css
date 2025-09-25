@@ -1,0 +1,44 @@
+.heading {
+  color: #AAAAAA;
+}
+
+/* Đoạn Geography */
+.geo {
+  font-family: Verdana;
+  font-size: 14pt;
+}
+
+/* Đoạn Topography */
+.topo {
+  text-align: left;
+  font-size: 14pt;
+  background-color: #CCCCCC;
+  padding-left: 1cm;
+}
+
+.topo b {
+  color: #0000FF;
+}
+
+/* Đoạn People */
+.people {
+  margin-left: 2cm;
+  background-image: url('images/camel.gif');
+}
+
+.people b {
+  color: #FF00FF;
+}
+
+/* Đoạn Religion */
+.religion {
+  margin-right: 1cm;
+  margin-left: 1cm;
+  text-align: justify;
+  background-color: #CCCCCC;
+}
+
+.religion b {
+  color: #00FFFF;
+  text-decoration: underline;
+}
