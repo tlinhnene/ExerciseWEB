@@ -1,0 +1,43 @@
+h3 {
+  height: 40px;
+  width: 100%;
+  background: url("../Ex36/images/h3.png") no-repeat 0 100%;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 10px 10px 25px 45px;
+  background: url("../Ex36/images/ul.png") no-repeat 0 100%;
+  list-style-image: url("../Ex36/images/li.png");
+}
+
+a:link,
+a:visited {
+  color: blue;
+  text-decoration: underline;
+}
+a:hover {
+  color: red;
+  padding-left: 10px;
+  text-decoration: underline;
+}
+a:active {
+  color: blue;
+}
+
+
+.menu {
+  width: 220px;
+  padding: 10px;
+  border-radius: 15px;
+  background: linear-gradient(#fff, #ffe6f0);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.as-hover {
+  color: red !important;
+  text-decoration: underline !important;
+  padding-left: 10px !important;
+}
