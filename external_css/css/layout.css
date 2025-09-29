@@ -1,0 +1,9 @@
+body {
+  background-image: url("../images/tlinh.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
