@@ -1,0 +1,89 @@
+
+:root{
+  --ink:#000000;
+  --line:#7aa9bd;
+  --bg:#ccf6f6;
+  --panel:#e6fcff;
+  --head:#bfeaf2;
+}
+*{box-sizing:border-box}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    margin:0;
+    color:#222;
+}
+.wrap{
+    width: 760px;
+    margin: 24px auto;
+    background: var(--panel);
+    border: 1px solid #9ec7d6;
+    padding: 20px 22px 28px;
+}
+.logo{
+    display:block;
+    margin: 0 auto 14px;
+    max-width:100%;
+    height:auto;
+}
+h2{
+    margin: 6px 0 14px;
+    padding-bottom: 6px;
+    color: var(--ink);
+    border-bottom: 2px solid var(--line);
+    font-size: 22px;
+}
+.form-ui .row{ margin: 10px 0; }
+.form-ui .row.inline{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+label{ font-size:14px; }
+.full{ width:100%; }
+.short{ width:200px; }
+
+input[type=text],
+select,
+textarea{
+    border:1px solid #9da9b0;
+    background:#f8fbfc;
+    padding:5px 6px;
+    border-radius:2px;
+    font-size:14px;
+}
+textarea{ resize:vertical; }
+
+.tbl{
+    width:100%;
+    border-collapse: collapse;
+    font-size:14px;
+}
+.tbl th, .tbl td{
+    border:1px solid #9db9c6;
+    padding:6px;
+}
+.tbl thead th{
+    background: var(--head);
+    color:#123;
+    text-align:left;
+}
+.tbl input[type=text]{ width:100%; }
+.tbl select{ width:100%; }
+.amt{ text-align:right; }
+
+.actions{ display:flex; gap:12px; align-items:center; }
+.btn{
+    appearance:none;
+    border: none;
+    background:#9aa7b3;
+    color:#fff;
+    padding:8px 12px;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14px;
+}
+.btn.primary{ background:#1291c8; }
+.btn:hover{ filter:brightness(1.05); }
+
+.note{
+    font-size:12px;
+    margin-top:14px;
+    color:#333;
+}

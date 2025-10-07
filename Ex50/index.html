@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <title>Exercise 50 – Travel Expense Report</title>
+        <link rel="stylesheet" href="mainstyle.css" />
+    </head>
+    <body>
+        <div class="wrap">
+            <img src="images/DeLong.jpg" alt="DeLong Enterprises" class="logo" />
+
+            <h2>Travel Expense Report</h2>
+
+            <form class="form-ui" autocomplete="off">
+            <div class="row inline">
+                <label>1) First Name:
+                <input type="text" name="fname" class="short" />
+                </label>
+                <label>Last Name:
+                <input type="text" name="lname" class="short" />
+                </label>
+            </div>
+
+            <div class="row">
+                <label>2) Social Security Number:
+                <input type="text" name="ssn" class="short" />
+                </label>
+            </div>
+
+            <div class="row">
+                <label>3) Department:
+                <select name="dept" class="short">
+                    <option>Accounting</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>Human Resources</option>
+                </select>
+                </label>
+            </div>
+
+            <div class="row">
+                <label>4) Describe the purpose of your trip:</label>
+                <textarea name="purpose" rows="4" class="full"></textarea>
+            </div>
+
+            <div class="row">
+                <label>5) Itemize your travel expenses</label>
+                <table class="tbl">
+                <thead>
+                    <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" placeholder="mm/dd/yy" /></td>
+                        <td><input type="text" /></td>
+                        <td>
+                            <select>
+                            <option>Meal</option>
+                            <option>Hotel</option>
+                            <option>Transport</option>
+                            <option>Other</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="amt" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="mm/dd/yy" /></td>
+                        <td><input type="text" /></td>
+                        <td>
+                            <select>
+                            <option>Meal</option>
+                            <option>Hotel</option>
+                            <option>Transport</option>
+                            <option>Other</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="amt" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="mm/dd/yy" /></td>
+                        <td><input type="text" /></td>
+                        <td>
+                            <select>
+                            <option>Meal</option>
+                            <option>Hotel</option>
+                            <option>Transport</option>
+                            <option>Other</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="amt" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="mm/dd/yy" /></td>
+                        <td><input type="text" /></td>
+                        <td>
+                            <select>
+                            <option>Meal</option>
+                            <option>Hotel</option>
+                            <option>Transport</option>
+                            <option>Other</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="amt" /></td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            <div class="row inline">
+                <span>6) Have you submitted your receipts?</span>
+                <label><input type="radio" name="rcpt" /> Yes</label>
+                <label><input type="radio" name="rcpt" /> No</label>
+            </div>
+
+            <div class="row actions">
+                <button type="button" class="btn primary">Submit travel expenses</button>
+                <input type="reset" class="btn" value="Reset" />
+            </div>
+
+            <p class="note">Questions? Contact Debbie Larson in Accounting (ext. 2150).</p>
+            </form>
+        </div>
+    </body>
+</html>
