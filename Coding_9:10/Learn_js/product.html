@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<title> Product Javascript - Lê Thị Trúc Linh - K234111395</title>
+        <style>
+            body {
+            font-family: Arial, sans-serif;
+            background-color: #e6edc3;
+            margin: 40px;
+            }
+
+            table {
+            border-collapse: collapse;
+            margin: 20px auto;
+            width: 70%;
+            background-color: #d6baca;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            caption {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+            }
+
+            thead {
+            background-color: #ffffff;
+            }
+
+            th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+            }
+
+            tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+            }
+
+            tbody tr:hover {
+            background-color: #e8f4ff;
+            transition: 0.2s;
+            }
+        </style>
+        <script>
+            function get_tr(id,name,price)
+            {
+                row="<tr><td>"+id+"</td><td>"+name+"</td><td>"+price+"</td></tr>"
+                return row
+            }
+            function get_tr_format(id,name,price)
+            {
+                row="<tr style='background-color:red'><td>"+id+"</td><td>"+name+"</td><td>"+price+"</td></tr>"
+                    return row
+            }
+            function do_save_product()
+            {
+                id=frm_product_input.product_id.value
+                name=frm_product_input.product_name.value
+                price=frm_product_input.product_price.value
+                tr=get_tr(id,name,price)
+                if (frm_product_input.product_type.checked==false)
+                {
+                    tr=get_tr_format(id,name,price)
+                }
+                product_body=document.getElementById("product_body")
+                product_body.innerHTML+=tr
+            }
+        </script>
+	</head>
+	<body>
+		<form name="frm_product_input">
+            <table>
+                <tr>
+                    <td>Product ID:</td>
+                    <td>
+                        <input type="text" name="product_id" id="product_id"/>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>Product Name:</td>
+                    <td>
+                        <input type="text" name="product_name" id="product_name"/>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>UnitPrice:</td>
+                    <td>
+                        <input type="text" name="product_price" id="product_price"/>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>Type of Product:</td>
+                    <td>
+                        <input type="checkbox" name="product_type" id="product_type" checked/>
+                        <label for="product_type">Official</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="button" onclick="do_save_product()">Save Product</button>
+                        <button type="reset">Clear</button>
+                        <button type="button">Help</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <table >
+            <caption>List of Products</caption>
+            <thead>
+                <tr>
+                    <td>Product ID</td>
+                    <td>Product Name</td>
+                    <td>Product Price</td>
+                </tr>
+            </thead>
+            <tbody id="product_body">
+
+            </tbody>
+        </table>
+	</body>
+</html>
