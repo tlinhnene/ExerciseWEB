@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Result - Lê Thị Trúc Linh - K234111395</title>
+        <link rel="stylesheet" href="mainstyle.css" />
+    </head>
+    <body>
+        <div class="card">
+        <h2>Message Sent Successfully</h2>
+        <p><strong>Full name:</strong> <span id="fullname"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Send to:</strong> <span id="department"></span></p>
+        <p><strong>Title:</strong> <span id="title"></span></p>
+        <p><strong>Content:</strong> <span id="content"></span></p>
+        </div>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById("fullname").innerText = params.get("fullname");
+            document.getElementById("email").innerText = params.get("email");
+            document.getElementById("department").innerText = params.get("department");
+            document.getElementById("title").innerText = params.get("title");
+            document.getElementById("content").innerText = params.get("content");
+        </script>
+    </body>
+</html>
