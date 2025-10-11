@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Ex53 - Lê Thị Trúc Linh - K234111395</title>
+        <link rel="stylesheet" href="mainstyle.css" />
+    </head>
+    <body>
+        <form action="result.html" method="get" class="card">
+            <h2>Product List</h2>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Part Number</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Item total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>C112</td>
+                        <td>Mouse</td>
+                        <td>19.95$</td>
+                        <td><input type="text" name="qty1" /></td>
+                        <td><input type="text" name="item1" placeholder="" /></td>
+                    </tr>
+                    <tr>
+                        <td>B124</td>
+                        <td>Keyboard US</td>
+                        <td>29.95$</td>
+                        <td><input type="text" name="qty2" /></td>
+                        <td><input type="text" name="item2" placeholder="" /></td>
+                    </tr>
+                    <tr>
+                        <td>U125</td>
+                        <td>USB KingMax</td>
+                        <td>39.95$</td>
+                        <td><input type="text" name="qty3" /></td>
+                        <td><input type="text" name="item3" placeholder="" /></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total">
+                <label>Total:</label>
+                <input type="text" name="total" />
+                <button type="submit" class="btn">Sum</button>
+            </div>
+        </form>
+    </body>
+</html>

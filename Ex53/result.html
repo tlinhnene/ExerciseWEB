@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title> Ex53 - Result - Lê Thị Trúc Linh - K234111395</title>
+        <link rel="stylesheet" href="mainstyle.css">
+    </head>
+    <body>
+        <div class="card">
+            <h2>Product Summary</h2>
+            <table>
+            <tr><th>Mouse Qty</th><td id="q1"></td></tr>
+            <tr><th>Keyboard Qty</th><td id="q2"></td></tr>
+            <tr><th>USB Qty</th><td id="q3"></td></tr>
+            <tr><th>Total</th><td id="t"></td></tr>
+            </table>
+        </div>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById("q1").innerText = params.get("qty1");
+            document.getElementById("q2").innerText = params.get("qty2");
+            document.getElementById("q3").innerText = params.get("qty3");
+            document.getElementById("t").innerText  = params.get("total");
+        </script>
+    </body>
+</html>
