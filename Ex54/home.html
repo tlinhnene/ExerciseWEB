@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Ex54 - Le Thi Truc Linh - K234111395</title>
+        <script src="main.js"></script>
+        <style>
+            table{ border-collapse:collapse; width:340px; margin:auto; background:#fff }
+            td{ padding:6px 10px; font-size:16px }
+            input[type=number]{ width:100%; font-size:16px; padding:4px }
+            .btns{ text-align:center }
+            button{ font-size:16px; padding:6px 10px; cursor:pointer }
+            fieldset{ width:360px; margin:40px auto }
+        </style>
+    </head>
+    <body>
+        <form name="my_form" onsubmit="return false">
+        <fieldset>
+            <legend><b>Math function</b></legend>
+            <table>
+                <tr>
+                    <td>a:</td>
+                    <td><input type="number" id="a" value="30"></td>
+                </tr>
+                <tr>
+                    <td>b:</td>
+                    <td><input type="number" id="b" value="45"></td>
+                </tr>
+                <tr>
+                    <td>c:</td>
+                    <td><input type="number" id="c" value="90"></td>
+                </tr>
+                <tr>
+                    <td>Result:</td>
+                    <td id="td_result"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="btns">
+                        <button type="button" onclick="ex54_max()">MAX</button>
+                        <button type="button" onclick="ex54_min()">MIN</button>
+                        <button type="button" onclick="ex54_sin()">sin(a)</button>
+                        <button type="button" onclick="ex54_cos()">cos(a)</button>
+                        <button type="button" onclick="ex54_pow()">a^b</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        </form>
+        <script>
+            ex54_sin();
+        </script>
+    </body>
+</html>
