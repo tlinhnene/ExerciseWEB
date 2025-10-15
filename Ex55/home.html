@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>Ex55 - Lê Thị Trúc Linh - K234111395</title>
+        <script src="mainjs.js"></script>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            padding: 40px;
+        }
+        fieldset {
+            width: 360px;
+            margin: auto;
+            border: none;
+            background-color: #fdfdfd;
+        }
+        legend {
+            background-color: #dcead1;
+            padding: 6px 12px;
+            font-weight: bold;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td {
+            border: 1px solid #999;
+            padding: 6px 10px;
+            font-size: 16px;
+        }
+        input[type="number"] {
+            width: 100%;
+            font-size: 16px;
+            padding: 4px;
+        }
+        .btn-row {
+            text-align: center;
+        }
+        button {
+            padding: 6px 12px;
+            font-size: 16px;
+            border: 1px solid #b59a60;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f8f6f0;
+        }
+        button:hover {
+            background-color: #f0ead6;
+        }
+        #td_result {
+            color: #b30000;
+            font-weight: bold;
+        }
+        </style>
+    </head>
+    <body>
+        <form name="my_form">
+        <fieldset>
+            <legend>The quadratic equation</legend>
+            <table>
+                <tr>
+                    <td>a:</td>
+                    <td><input type="number" id="a" value="1" /></td>
+                </tr>
+                <tr>
+                    <td>b:</td>
+                    <td><input type="number" id="b" value="3" /></td>
+                </tr>
+                <tr>
+                    <td>c:</td>
+                    <td><input type="number" id="c" value="-4" /></td>
+                </tr>
+                <tr>
+                    <td>Result:</td>
+                    <td id="td_result"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="btn-row">
+                        <button type="button" onclick="solve_quadratic()">Find solution</button>
+                        <button type="button" onclick="clear_quadratic()">Clear</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        </form>
+    </body>
+</html>
