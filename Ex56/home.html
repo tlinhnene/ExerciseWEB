@@ -1,0 +1,59 @@
+<html lang="en">
+    <head>
+        <title>Ex56 -  Lê Thị Trúc Linh - K234111395</title>
+        <link rel="stylesheet" href="mainstyle.css" />
+        <script src="mainjs.js"></script>
+    </head>
+    <body>
+    <form name="my_form" onsubmit="return false">
+        <fieldset class="panel">
+        <legend>Using String Processing Functions</legend>
+
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th>Input Data:</th>
+                    <th>Result:</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><textarea id="txt_input" rows="6" placeholder="Enter your text here..."></textarea></td>
+                    <td><textarea id="txt_result" rows="6" readonly></textarea></td>
+                </tr>
+
+                <tr>
+                    <td><button type="button" class="btn" onclick="ex56_enter()">Enter Data</button></td>
+                    <td><button type="button" class="btn" onclick="ex56_countUpper()">Count the number of uppercase characters</button></td>
+                </tr>
+
+                <tr>
+                    <td><button type="button" class="btn" onclick="ex56_upper()">Uppercase display</button></td>
+                    <td><button type="button" class="btn" onclick="ex56_oneWordPerLine()">Output one word per line</button></td>
+                </tr>
+
+                <tr>
+                    <td><button type="button" class="btn" onclick="ex56_lower()">Lowercase display</button></td>
+                    <td><button type="button" class="btn" onclick="ex56_wordCount()">Word count</button></td>
+                </tr>
+
+                <tr>
+                    <td><button type="button" class="btn" onclick="ex56_countLower()">Count the number of lowercase characters</button></td>
+                    <td><button type="button" class="btn" onclick="ex56_printVowelsConsonants()">Print vowels, consonants</button></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <a class="link" target="_blank"
+                            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">
+                            W3C's String Processing Website
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </fieldset>
+    </form>
+    </body>
+</html>
