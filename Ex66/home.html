@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Ex66 - Lê Thị Trúc Linh - K234111395</title>
+        <link rel="stylesheet" href="mainstyle.css" />
+    </head>
+    <body>
+    <div class="card">
+        <h1>Student Information</h1>
+
+        <table id="infoTable">
+        <tbody>
+            <tr class="row">
+                <th>Student ID:</th>
+                <td id="td_id"></td>
+            </tr>
+            <tr class="row">
+                <th>Student Name:</th>
+                <td id="td_name"></td>
+            </tr>
+            <tr class="row">
+                <th>Birthday:</th>
+                <td id="td_birthday"></td>
+            </tr>
+            <tr class="row">
+                <th>Gender:</th>
+                <td id="td_gender"></td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+
+    <script>
+        const xmlString = `
+        <student>
+            <id>K234111395</id>
+            <name>Lê Thị Trúc Linh </name>
+            <birthday>20/02/2005</birthday>
+            <gender>Female</gender>
+        </student>
+        `;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        const get = tag => xmlDoc.getElementsByTagName(tag)[0]?.textContent?.trim() || "";
+
+        document.getElementById("td_id").textContent = get("id");
+        document.getElementById("td_name").textContent = get("name");
+        document.getElementById("td_birthday").textContent = get("birthday");
+        document.getElementById("td_gender").textContent = get("gender");
+
+        const rows = document.querySelectorAll("#infoTable .row");
+        rows.forEach(tr => {
+        tr.addEventListener("mouseover", () => {
+            tr.style.background = "#1e90ff";  
+            tr.style.color = "#fff";         
+        });
+        tr.addEventListener("mouseout", () => {
+            tr.style.background = "#ffffff";   
+            tr.style.color = "#000000";       
+        });
+        });
+    </script>
+    </body>
+</html>
