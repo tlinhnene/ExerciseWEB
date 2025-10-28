@@ -34,7 +34,7 @@
 <script>
 (async function main(){
   const RSS = "https://vnexpress.net/rss/kinh-doanh.rss";
-  const API = "https://api.allorigins.win/get?url=" + encodeURIComponent(RSS); // tránh CORS
+  const API = "https://api.allorigins.win/get?url=" + encodeURIComponent(RSS); 
   const statusEl = document.getElementById("status");
   const tbody = document.getElementById("rss_tbody");
 
@@ -44,7 +44,7 @@
     const { contents } = await res.json();
 
     const xml = new DOMParser().parseFromString(contents, "text/xml");
-    const items = Array.from(xml.querySelectorAll("item")).slice(0, 20); // giới hạn 20 bài
+    const items = Array.from(xml.querySelectorAll("item")).slice(0, 20); 
     if(items.length === 0) {
       statusEl.textContent = "Không có dữ liệu RSS.";
       return;
@@ -77,7 +77,7 @@
       const tdTitle = document.createElement("td");
       const a = document.createElement("a");
       a.href = link;
-      a.target = "_blank";    // bấm mở trang gốc
+      a.target = "_blank";    
       a.rel = "noopener";
       a.textContent = title;
       tdTitle.appendChild(a);
