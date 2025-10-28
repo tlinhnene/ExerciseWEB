@@ -1,148 +1,176 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <title>WEATHER FORECAST – Tuổi Trẻ | Lê Thị Trúc Linh – K234111395</title>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dự báo thời tiết – Lê Thị Trúc Linh - K234111395</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="mainstyle.css" />
+  <script>
+    let data = [
+      {"value":"2347719","name":"An Giang"},{"value":"20070078","name":"Bình Dương"},
+      {"value":"20070086","name":"Bình Phước"},{"value":"2347731","name":"Bình Thuận"},
+      {"value":"2347730","name":"Bình Định"},{"value":"20070081","name":"Bạc Liêu"},
+      {"value":"20070087","name":"Bắc Giang"},{"value":"20070084","name":"Bắc Kạn"},
+      {"value":"20070088","name":"Bắc Ninh"},{"value":"2347703","name":"Bến Tre"},
+      {"value":"2347704","name":"Cao Bằng"},{"value":"20070082","name":"Cà Mau"},
+      {"value":"2347732","name":"Cần Thơ"},{"value":"28301718","name":"Điện Biên"},
+      {"value":"20070085","name":"Đà Nẵng"},{"value":"1252375","name":"Đà Lạt"},
+      {"value":"2347720","name":"Đắk Lắk"},{"value":"28301719","name":"Đắk Nông"},
+      {"value":"2347721","name":"Đồng Nai"},{"value":"2347722","name":"Đồng Tháp"},
+      {"value":"2347733","name":"Gia Lai"},{"value":"2347727","name":"Hà Nội"},
+      {"value":"2347728","name":"TP. Hồ Chí Minh"},{"value":"2347734","name":"Hà Giang"},
+      {"value":"2347741","name":"Hà Nam"},{"value":"2347736","name":"Hà Tĩnh"},
+      {"value":"2347737","name":"Hòa Bình"},{"value":"20070079","name":"Hưng Yên"},
+      {"value":"20070080","name":"Hải Dương"},{"value":"2347707","name":"Hải Phòng"},
+      {"value":"28301720","name":"Hậu Giang"},{"value":"2347738","name":"Khánh Hòa"},
+      {"value":"2347723","name":"Kiên Giang"},{"value":"20070076","name":"Kon Tum"},
+      {"value":"2347708","name":"Lai Châu"},{"value":"2347710","name":"Long An"},
+      {"value":"2347740","name":"Lào Cai"},{"value":"2347709","name":"Lâm Đồng"},
+      {"value":"2347718","name":"Lạng Sơn"},{"value":"20070089","name":"Nam Định"},
+      {"value":"2347742","name":"Nghệ An"},{"value":"2347743","name":"Ninh Bình"},
+      {"value":"2347744","name":"Ninh Thuận"},{"value":"20070091","name":"Phú Thọ"},
+      {"value":"2347745","name":"Phú Yên"},{"value":"2347746","name":"Quảng Bình"},
+      {"value":"2347711","name":"Quảng Nam"},{"value":"20070077","name":"Quảng Ngãi"},
+      {"value":"2347712","name":"Quảng Ninh"},{"value":"2347747","name":"Quảng Trị"},
+      {"value":"2347748","name":"Sóc Trăng"},{"value":"2347713","name":"Sơn La"},
+      {"value":"2347715","name":"Thanh Hóa"},{"value":"2347716","name":"Thái Bình"},
+      {"value":"20070083","name":"Thái Nguyên"},{"value":"2347749","name":"Thừa Thiên Huế"},
+      {"value":"2347717","name":"Tiền Giang"},{"value":"2347750","name":"Trà Vinh"},
+      {"value":"2347751","name":"Tuyên Quang"},{"value":"2347714","name":"Tây Ninh"},
+      {"value":"2347752","name":"Vĩnh Long"},{"value":"20070090","name":"Vĩnh Phúc"},
+      {"value":"2347729","name":"Vũng Tàu"},{"value":"2347753","name":"Yên Bái"}
+    ];
+  </script>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="emoji"></div>
-      <h1>WEATHER FORECAST – TUỔI TRẺ</h1>
-    </div>
+  <div class="wrap">
+    <header class="head">
+      <h1>Dự báo thời tiết Việt Nam</h1>
+      <p class="sub">Nguồn dữ liệu từ Tuổi Trẻ Weather API</p>
+    </header>
 
-    <div class="controls">
-      <label for="provinces">Chọn tỉnh / thành:</label>
-      <select id="provinces" class="select" onchange="loadWeather(this.value)"></select>
-    </div>
+    <section class="toolbar">
+      <div class="select-box">
+        <label for="province-select">Chọn tỉnh thành</label>
+        <select id="province-select">
+          <option value="">Đang chờ lựa chọn</option>
+        </select>
+      </div>
+      <button id="refresh" class="btn">Làm mới</button>
+    </section>
 
-    <div id="meta" class="meta">
-      <div>Địa phương: <b id="city">—</b></div>
-      <div>Mã tỉnh: <b id="apid">—</b></div>
-      <div>API: <a id="api" target="_blank" rel="noopener">—</a></div>
-      <div>Thời điểm: <b id="time">—</b></div>
-    </div>
+    <section id="weather-display" class="grid" style="display:none">
+      <article class="card now">
+        <h2 id="location" class="place"></h2>
+        <img id="current-icon" class="icon-lg" src="" alt="Biểu tượng thời tiết">
+        <p id="temperature" class="temp"></p>
+        <p id="status" class="state"></p>
+      </article>
 
-    <div id="result" class="card">
-      <i>Chọn tỉnh để hiển thị thời tiết...</i>
-    </div>
+      <aside class="card detail">
+        <div class="stats">
+          <div class="item"><strong>Cao nhất</strong><span id="high"></span>°C</div>
+          <div class="item"><strong>Thấp nhất</strong><span id="low"></span>°C</div>
+          <div class="item"><strong>Cảm giác như</strong><span id="feels-like"></span>°C</div>
+          <div class="item"><strong>Độ ẩm</strong><span id="humidity"></span></div>
+          <div class="item"><strong>Tầm nhìn</strong><span id="visibility"></span></div>
+          <div class="item"><strong>UV Index</strong><span id="uv-index"></span></div>
+          <div class="item"><strong>Gió</strong><span id="wind"></span></div>
+          <div class="item"><strong>Mặt trời mọc</strong><span id="sunrise"></span></div>
+          <div class="item"><strong>Mặt trời lặn</strong><span id="sunset"></span></div>
+        </div>
+      </aside>
+    </section>
 
-    <div class="footer-note">Nguồn dữ liệu: utils3.cnnd.vn (Tuổi Trẻ)</div>
+    <section class="forecast-wrap" style="display:none">
+      <h3>Dự báo 7 ngày</h3>
+      <div id="forecast" class="forecast"></div>
+    </section>
+
+    <div id="skeleton" class="skeleton" style="display:none">
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-row"></div>
+    </div>
   </div>
 
   <script>
+    const selectEl = document.getElementById('province-select');
+    const refreshBtn = document.getElementById('refresh');
+    const weatherWrap = document.getElementById('weather-display');
+    const forecastWrap = document.querySelector('.forecast-wrap');
+    const skeleton = document.getElementById('skeleton');
 
-    const ids=['2347719','20070078','20070086','2347731','2347730','20070081','20070087','20070084','20070088','2347703','2347704','20070082','2347732','28301718','20070085','1252375','2347720','28301719','2347721','2347722','2347733','2347727','2347728','2347734','2347741','2347736','2347737','20070079','20070080','2347707','28301720','2347738','2347723','20070076','2347708','2347710','2347740','2347709','2347718','20070089','2347742','2347743','2347744','20070091','2347745','2347746','2347711','20070077','2347712','2347747','2347748','2347713','2347715','2347716','20070083','2347749','2347717','2347750','2347751','2347714','2347752','20070090','2347729','2347753'];
-    const names=['An Giang','Bình Dương','Bình Phước','Bình Thuận','Bình Định','Bạc Liêu','Bắc Giang','Bắc Kạn','Bắc Ninh','Bến Tre','Cao Bằng','Cà Mau','Cần Thơ','Điện Biên','Đà Nẵng','Đà Lạt','Đắk Lắk','Đắk Nông','Đồng Nai','Đồng Tháp','Gia Lai','Hà Nội','TP. Hồ Chí Minh','Hà Giang','Hà Nam','Hà Tĩnh','Hòa Bình','Hưng Yên','Hải Dương','Hải Phòng','Hậu Giang','Khánh Hòa','Kiên Giang','Kon Tum','Lai Châu','Long An','Lào Cai','Lâm Đồng','Lạng Sơn','Nam Định','Nghệ An','Ninh Bình','Ninh Thuận','Phú Thọ','Phú Yên','Quảng Bình','Quảng Nam','Quảng Ngãi','Quảng Ninh','Quảng Trị','Sóc Trăng','Sơn La','Thanh Hóa','Thái Bình','Thái Nguyên','Thừa Thiên Huế','Tiền Giang','Trà Vinh','Tuyên Quang','Tây Ninh','Vĩnh Long','Vĩnh Phúc','Vũng Tàu','Yên Bái'];
+    data.forEach(p => {
+      const op = document.createElement('option');
+      op.value = p.value;
+      op.textContent = p.name;
+      selectEl.appendChild(op);
+    });
 
-    const $ = (id)=>document.getElementById(id);
-    const vnTime = ()=>new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    selectEl.addEventListener('change', () => selectEl.value ? fetchWeather(selectEl.value) : hideAll());
+    refreshBtn.addEventListener('click', () => selectEl.value ? fetchWeather(selectEl.value, true) : null);
 
-    function initSelect(){
-      const sel=$('provinces');
-      ids.forEach((id,i)=>{
-        const op=document.createElement('option');
-        op.value=id; op.textContent=names[i];
-        sel.appendChild(op);
-      });
-      sel.value = ids[1]; 
-      loadWeather(sel.value);
+    function hideAll() {
+      weatherWrap.style.display = 'none';
+      forecastWrap.style.display = 'none';
     }
 
-    async function loadWeather(id){
-      if(!id) return;
-      const city = names[ids.indexOf(id)] || id;
-      const api  = `https://utils3.cnnd.vn/ajax/weatherinfo/${id}.htm`;
-      const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(api)}`;
+    async function fetchWeather(code, isRefresh=false) {
+      try {
+        skeleton.style.display = 'grid';
+        weatherWrap.style.display = 'none';
+        forecastWrap.style.display = 'none';
 
-      $('city').textContent = city;
-      $('apid').textContent = id;
-      $('api').href = api; $('api').textContent = api;
-      $('time').textContent = vnTime();
+        const url = `https://utils3.cnnd.vn/ajax/weatherinfo/${code}.htm`;
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
+        const payload = await response.json();
 
-      const box = $('result');
-      box.innerHTML = `<p class="loading">Đang tải dữ liệu thời tiết cho <b>${city}</b>...</p>`;
+        if (!(payload.Data && payload.Data.success)) throw new Error('API trả về lỗi');
 
-      try{
-        const res = await fetch(proxied, { cache:'no-store' });
-        const text = await res.text();
-        const json = JSON.parse(text);
-
-    
-        const info = (json.data && json.data.datainfo) ? json.data.datainfo
-                    : (json.Data && json.Data.data && json.Data.data.datainfo) ? json.Data.data.datainfo
-                    : null;
-        if(!info) throw new Error('Không tìm thấy dữ liệu hợp lệ');
-
-        renderUI(info, box);
-      }catch(e){
-        box.innerHTML = `<p class="error">Không thể tải dữ liệu (${e.message||e}).</p>`;
+        displayWeather(payload.Data.data.datainfo);
+      } catch (e) {
+        console.error(e);
+        alert('Không thể tải dữ liệu thời tiết. Vui lòng thử lại.');
+        hideAll();
+      } finally {
+        skeleton.style.display = 'none';
       }
     }
 
-    function renderUI(info, box){
-      const degree = info.degree || 'C';
-      const temp   = (info.temperature ?? '—');
-      const status = info.status || '';
-      const high   = info.high ?? '—';
-      const low    = info.low ?? '—';
-      const feels  = info.feels_like ?? '—';
-      const humid  = info.humidity ?? '—';
-      const uv     = (info.UV_index && info.UV_index.index!=null) ? `${info.UV_index.index} (${info.UV_index.status||''})` : '—';
-      const wind   = (info.wind && info.wind.index!=null) ? `${info.wind.index} ${info.wind.unit||''}` : '—';
-      const vis    = (info.visibility && info.visibility.index!=null) ? `${info.visibility.index} ${info.visibility.unit||''}` : '—';
-      const sunrise= info.sunrise || '—';
-      const sunset = info.sunset  || '—';
-      const hours  = Array.isArray(info.hourly_temperature) ? info.hourly_temperature : [];
+    function displayWeather(info) {
+      document.getElementById('location').textContent = info.location;
+      document.getElementById('temperature').textContent = `${info.temperature}°C`;
+      document.getElementById('status').textContent = info.status;
+      document.getElementById('high').textContent = info.high;
+      document.getElementById('low').textContent = info.low;
+      document.getElementById('feels-like').textContent = info.feels_like;
+      document.getElementById('humidity').textContent = info.humidity;
+      document.getElementById('visibility').textContent = `${info.visibility.index} ${info.visibility.unit}`;
+      document.getElementById('uv-index').textContent = `${info.UV_index.index} (${info.UV_index.status})`;
+      document.getElementById('wind').textContent = `${info.wind.index} ${info.wind.unit}`;
+      document.getElementById('sunrise').textContent = info.sunrise;
+      document.getElementById('sunset').textContent = info.sunset;
+      document.getElementById('current-icon').src = info.shadow_icon;
 
-      box.innerHTML = `
-        <div class="panel">
-          <div class="current">
-            <div class="temp">${temp}<span class="degree">°${degree}</span></div>
-            <div class="status">${status}</div>
-            <div class="kv">
-              <div><span>Cao / Thấp</span><b>${high}° / ${low}°</b></div>
-              <div><span>Cảm giác như</span><b>${feels}°</b></div>
-              <div><span>Độ ẩm</span><b>${humid}</b></div>
-              <div><span>Chỉ số UV</span><b>${uv}</b></div>
-              <div><span>Gió</span><b>${wind}</b></div>
-              <div><span>Tầm nhìn</span><b>${vis}</b></div>
-              <div><span>Bình minh</span><b>${sunrise}</b></div>
-              <div><span>Hoàng hôn</span><b>${sunset}</b></div>
-            </div>
-          </div>
+      const box = document.getElementById('forecast');
+      box.innerHTML = '';
+      info.forecast.forEach(day => {
+        const el = document.createElement('div');
+        el.className = 'fcard';
+        el.innerHTML = `
+          <p class="d">${day.date}</p>
+          <img src="${day.shadow_icon}" alt="icon" class="icon-sm">
+          <p class="t">${day.high}° / ${day.low}°</p>
+          <p class="s">${day.status}</p>
+        `;
+        box.appendChild(el);
+      });
 
-          <div>
-            <div class="section-title">
-              <h3>Dự báo theo giờ</h3>
-              <span style="color:var(--muted);font-size:12px">Kéo ngang để xem thêm</span>
-            </div>
-            <div class="hours">
-              ${
-                hours.map(h=>{
-                  const icon = h.shadow_icon || h.icon || '';
-                  const t = (h.temperature!=null)? `${h.temperature}°` : '—';
-                  const time = (h.time!=null)? `${h.time}h` : '';
-                  const st = h.status || '';
-                  return `
-                    <div class="hour">
-                      <div>${time}</div>
-                      ${icon?`<img src="${icon}" alt="${st}" loading="lazy">`:''}
-                      <div class="t">${t}</div>
-                      <div class="s">${st}</div>
-                    </div>
-                  `;
-                }).join('')
-              }
-            </div>
-          </div>
-        </div>
-      `;
+      weatherWrap.style.display = 'grid';
+      forecastWrap.style.display = 'block';
     }
-
-    window.addEventListener('DOMContentLoaded', initSelect);
   </script>
 </body>
 </html>
