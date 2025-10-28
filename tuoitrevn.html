@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <title>WEATHER FORECAST – Tuổi Trẻ | Lê Thị Trúc Linh – K234111395</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="mainstyle.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji"></div>
+      <h1>WEATHER FORECAST – TUỔI TRẺ</h1>
+    </div>
+
+    <div class="controls">
+      <label for="provinces">Chọn tỉnh / thành:</label>
+      <select id="provinces" class="select" onchange="loadWeather(this.value)"></select>
+    </div>
+
+    <div id="meta" class="meta">
+      <div>Địa phương: <b id="city">—</b></div>
+      <div>Mã tỉnh: <b id="apid">—</b></div>
+      <div>API: <a id="api" target="_blank" rel="noopener">—</a></div>
+      <div>Thời điểm: <b id="time">—</b></div>
+    </div>
+
+    <div id="result" class="card">
+      <i>Chọn tỉnh để hiển thị thời tiết...</i>
+    </div>
+
+    <div class="footer-note">Nguồn dữ liệu: utils3.cnnd.vn (Tuổi Trẻ)</div>
+  </div>
+
+  <script>
+
+    const ids=['2347719','20070078','20070086','2347731','2347730','20070081','20070087','20070084','20070088','2347703','2347704','20070082','2347732','28301718','20070085','1252375','2347720','28301719','2347721','2347722','2347733','2347727','2347728','2347734','2347741','2347736','2347737','20070079','20070080','2347707','28301720','2347738','2347723','20070076','2347708','2347710','2347740','2347709','2347718','20070089','2347742','2347743','2347744','20070091','2347745','2347746','2347711','20070077','2347712','2347747','2347748','2347713','2347715','2347716','20070083','2347749','2347717','2347750','2347751','2347714','2347752','20070090','2347729','2347753'];
+    const names=['An Giang','Bình Dương','Bình Phước','Bình Thuận','Bình Định','Bạc Liêu','Bắc Giang','Bắc Kạn','Bắc Ninh','Bến Tre','Cao Bằng','Cà Mau','Cần Thơ','Điện Biên','Đà Nẵng','Đà Lạt','Đắk Lắk','Đắk Nông','Đồng Nai','Đồng Tháp','Gia Lai','Hà Nội','TP. Hồ Chí Minh','Hà Giang','Hà Nam','Hà Tĩnh','Hòa Bình','Hưng Yên','Hải Dương','Hải Phòng','Hậu Giang','Khánh Hòa','Kiên Giang','Kon Tum','Lai Châu','Long An','Lào Cai','Lâm Đồng','Lạng Sơn','Nam Định','Nghệ An','Ninh Bình','Ninh Thuận','Phú Thọ','Phú Yên','Quảng Bình','Quảng Nam','Quảng Ngãi','Quảng Ninh','Quảng Trị','Sóc Trăng','Sơn La','Thanh Hóa','Thái Bình','Thái Nguyên','Thừa Thiên Huế','Tiền Giang','Trà Vinh','Tuyên Quang','Tây Ninh','Vĩnh Long','Vĩnh Phúc','Vũng Tàu','Yên Bái'];
+
+    const $ = (id)=>document.getElementById(id);
+    const vnTime = ()=>new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+
+    function initSelect(){
+      const sel=$('provinces');
+      ids.forEach((id,i)=>{
+        const op=document.createElement('option');
+        op.value=id; op.textContent=names[i];
+        sel.appendChild(op);
+      });
+      sel.value = ids[1]; 
+      loadWeather(sel.value);
+    }
+
+    async function loadWeather(id){
+      if(!id) return;
+      const city = names[ids.indexOf(id)] || id;
+      const api  = `https://utils3.cnnd.vn/ajax/weatherinfo/${id}.htm`;
+      const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(api)}`;
+
+      $('city').textContent = city;
+      $('apid').textContent = id;
+      $('api').href = api; $('api').textContent = api;
+      $('time').textContent = vnTime();
+
+      const box = $('result');
+      box.innerHTML = `<p class="loading">Đang tải dữ liệu thời tiết cho <b>${city}</b>...</p>`;
+
+      try{
+        const res = await fetch(proxied, { cache:'no-store' });
+        const text = await res.text();
+        const json = JSON.parse(text);
+
+    
+        const info = (json.data && json.data.datainfo) ? json.data.datainfo
+                    : (json.Data && json.Data.data && json.Data.data.datainfo) ? json.Data.data.datainfo
+                    : null;
+        if(!info) throw new Error('Không tìm thấy dữ liệu hợp lệ');
+
+        renderUI(info, box);
+      }catch(e){
+        box.innerHTML = `<p class="error">Không thể tải dữ liệu (${e.message||e}).</p>`;
+      }
+    }
+
+    function renderUI(info, box){
+      const degree = info.degree || 'C';
+      const temp   = (info.temperature ?? '—');
+      const status = info.status || '';
+      const high   = info.high ?? '—';
+      const low    = info.low ?? '—';
+      const feels  = info.feels_like ?? '—';
+      const humid  = info.humidity ?? '—';
+      const uv     = (info.UV_index && info.UV_index.index!=null) ? `${info.UV_index.index} (${info.UV_index.status||''})` : '—';
+      const wind   = (info.wind && info.wind.index!=null) ? `${info.wind.index} ${info.wind.unit||''}` : '—';
+      const vis    = (info.visibility && info.visibility.index!=null) ? `${info.visibility.index} ${info.visibility.unit||''}` : '—';
+      const sunrise= info.sunrise || '—';
+      const sunset = info.sunset  || '—';
+      const hours  = Array.isArray(info.hourly_temperature) ? info.hourly_temperature : [];
+
+      box.innerHTML = `
+        <div class="panel">
+          <div class="current">
+            <div class="temp">${temp}<span class="degree">°${degree}</span></div>
+            <div class="status">${status}</div>
+            <div class="kv">
+              <div><span>Cao / Thấp</span><b>${high}° / ${low}°</b></div>
+              <div><span>Cảm giác như</span><b>${feels}°</b></div>
+              <div><span>Độ ẩm</span><b>${humid}</b></div>
+              <div><span>Chỉ số UV</span><b>${uv}</b></div>
+              <div><span>Gió</span><b>${wind}</b></div>
+              <div><span>Tầm nhìn</span><b>${vis}</b></div>
+              <div><span>Bình minh</span><b>${sunrise}</b></div>
+              <div><span>Hoàng hôn</span><b>${sunset}</b></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">
+              <h3>Dự báo theo giờ</h3>
+              <span style="color:var(--muted);font-size:12px">Kéo ngang để xem thêm</span>
+            </div>
+            <div class="hours">
+              ${
+                hours.map(h=>{
+                  const icon = h.shadow_icon || h.icon || '';
+                  const t = (h.temperature!=null)? `${h.temperature}°` : '—';
+                  const time = (h.time!=null)? `${h.time}h` : '';
+                  const st = h.status || '';
+                  return `
+                    <div class="hour">
+                      <div>${time}</div>
+                      ${icon?`<img src="${icon}" alt="${st}" loading="lazy">`:''}
+                      <div class="t">${t}</div>
+                      <div class="s">${st}</div>
+                    </div>
+                  `;
+                }).join('')
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.addEventListener('DOMContentLoaded', initSelect);
+  </script>
+</body>
+</html>
