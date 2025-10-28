@@ -55,7 +55,6 @@
       const link  = item.querySelector("link")?.textContent?.trim() || "#";
       const pub   = item.querySelector("pubDate")?.textContent?.trim() || "";
 
-      // Description thường là CDATA chứa <img>
       const desc  = item.querySelector("description")?.textContent || "";
       const tmp = document.createElement("div");
       tmp.innerHTML = desc;
