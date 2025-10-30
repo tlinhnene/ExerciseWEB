@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Midterm test – Lê Thị Trúc Linh - K234111395</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <!-- A -->
+  <header id="A">
+    <div class="menu-grid">
+      <!-- Hàng 1 -->
+      <button data-page="pages/about.html"     style="grid-column:1;grid-row:1">About me</button>
+      <button data-page="pages/form.html"      style="grid-column:2;grid-row:1">Form & Javascript</button>
+      <button data-page="pages/APIvietlot.html"       style="grid-column:3;grid-row:1">API and External</button>
+      <button data-page="pages/login.html"     style="grid-column:4;grid-row:1">Login/Logout</button>
+      <!-- Hàng 2 -->
+      <button data-page="pages/products.html"  style="grid-column:2;grid-row:2">Products</button>
+      <button data-page="pages/weather.html"   style="grid-column:3;grid-row:2">Weather API</button>
+      <!-- Hàng 3 -->
+      <button data-page="pages/employees.html" style="grid-column:2;grid-row:3">Employees</button>
+      <button data-page="pages/rss.html"       style="grid-column:3;grid-row:3">RSS</button>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <main class="layout">
+  
+    <aside id="B" class="vietlott">
+      <h3 style="margin:0 0 8px">Vietlott Jackpot</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <label style="display:flex;gap:6px;align-items:center">
+          <input type="radio" name="game" value="mega645" checked> Mega 6/45
+        </label>
+        <label style="display:flex;gap:6px;align-items:center">
+          <input type="radio" name="game" value="power655"> Power 6/55
+        </label>
+        <span id="vtl-status" style="margin-left:auto;color:#64748b;font-size:12px">Ready</span>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden">
+        <thead style="background:#f3f4f6">
+          <tr>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #e5e7eb">Draw</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #e5e7eb">Date</th>
+          </tr>
+        </thead>
+        <tbody id="vtl-short" style="font-weight:600">
+          <tr><td colspan="2" style="padding:10px">Loading…</td></tr>
+        </tbody>
+      </table>
+
+      <div id="vtl-nums" style="margin-top:10px;font-weight:700;letter-spacing:.5px"></div>
+      <div id="vtl-jp" class="muted" style="font-size:12px;color:#64748b"></div>
+    </aside>
+
+    <script>
+    (function(){
+      const API = "https://webapi.dantri.com.vn/lottery/get-vietlott-jack";
+      const TRY = [
+        API,
+        "https://api.allorigins.win/raw?url=" + encodeURIComponent(API),
+        "https://api.codetabs.com/v1/proxy?quest=" + API,
+        "https://cors.isomorphic-git.org/" + API
+      ];
+      const $status = document.getElementById('vtl-status');
+      const $tbody  = document.getElementById('vtl-short');
+      const $nums   = document.getElementById('vtl-nums');
+      const $jp     = document.getElementById('vtl-jp');
+
+      document.querySelectorAll('input[name=game]').forEach(r =>
+        r.addEventListener('change', () => load(r.value))
+      );
+
+      async function fetchJSON(){
+        for(const url of TRY){
+          try{
+            const r = await fetch(url,{cache:"no-store"});
+            if(!r.ok) continue;
+            const t = await r.text();
+            return JSON.parse(t);
+          }catch{}
+        }
+        throw new Error("Fetch/CORS error");
+      }
+      function toVND(v){
+        const n = Number(String(v).replace(/[^\d.-]/g,""));
+        return Number.isFinite(n) ? n.toLocaleString("vi-VN") : (v||"-");
+      }
+      function normalize(data, game){
+        let arr = data?.data?.[game] || data?.[game] || [];
+        if (!Array.isArray(arr) && Array.isArray(data)) {
+          arr = data.filter(x => (x.type||x.product||"").toLowerCase().includes(game));
+        }
+        return (arr||[]).map(it=>{
+          const drawNo  = it.drawNo || it.period || it.id || it.drawid || "-";
+          const date    = it.openDate || it.drawDate || it.date || it.time || "-";
+          let nums = it.result || it.numbers || "";
+          if (Array.isArray(nums)) nums = nums.join(" ");
+          if (!nums){
+            const ns = ['n1','n2','n3','n4','n5','n6','n7'].map(k=>it[k]).filter(Boolean);
+            nums = ns.join(" ");
+          }
+          if (game === "power655" && it.n7 && !String(nums).includes(it.n7)) nums = `${nums} + ${it.n7}`;
+          const jackpot = it.jackpot || it.jackpot1 || it.prize || it.value || it.jackpot_value || "-";
+          return {drawNo,date,nums:String(nums).replace(/[,\s]+/g," "),jackpot};
+        });
+      }
+
+      async function load(game='mega645'){
+        $status.textContent = "Loading " + game + "…";
+        $tbody.innerHTML = `<tr><td colspan="2" style="padding:10px">Loading…</td></tr>`;
+        $nums.textContent = ""; $jp.textContent = "";
+        try{
+          const data = await fetchJSON();
+          const list = normalize(data, game);
+          if(!list.length){ $tbody.innerHTML = `<tr><td colspan="2" style="padding:10px">No data</td></tr>`; $status.textContent="Empty"; return; }
+    
+          const rows = list.slice(0,5).map(x => `
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #eef0f4">#${x.drawNo}</td>
+              <td style="padding:8px;border-bottom:1px solid #eef0f4">${x.date}</td>
+            </tr>`).join("");
+          $tbody.innerHTML = rows;
+
+          const latest = list[0];
+          $nums.textContent = `Numbers: ${latest.nums}`;
+          $jp.textContent = `Jackpot: ${toVND(latest.jackpot)} ₫`;
+          $status.textContent = `Loaded ${list.length} rows`;
+        }catch(e){
+          $status.textContent = "Error";
+          $tbody.innerHTML = `<tr><td colspan="2" style="padding:10px;color:#b91c1c">Không tải được dữ liệu API</td></tr>`;
+        }
+      }
+
+      load('mega645');
+    })();
+    </script>
+
+    <section id="C">
+      <div class="page" id="home">
+        <h2>Đang tải trang...</h2>
+      </div>
+    </section>
+
+    <aside id="D">
+      <div class="widget"></div>
+      <div class="marquee-wrap">
+        <div class="marquee">
+          I declare that all of these solutions are my own and not copied from anyone in this class
+        </div>
+      </div>
+    </aside>
+  <footer id="E">
+    <div id="designedBy"></div>
+  </footer>
+</body>
+</html>

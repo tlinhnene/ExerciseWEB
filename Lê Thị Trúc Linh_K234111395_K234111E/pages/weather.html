@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Weather API – Tuổi Trẻ - Lê Thị Trúc Linh - K234111395</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .wx-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.06);padding:18px 20px}
+    .wx-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .wx-badge{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;background:#f8fafc}
+    .wx-table{width:100%;border-collapse:collapse;font-size:15px;border-radius:12px;overflow:hidden}
+    .wx-table thead th{background:linear-gradient(90deg,#4f46e5,#818cf8);color:#fff;text-align:left;padding:10px 12px}
+    .wx-table td{border:1px solid #e2e8f0;padding:10px 12px;color:#334155}
+    .wx-table tr:nth-child(even){background:#f8fafc}
+    .wx-table tr:hover{background:#eef2ff}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="wx-card">
+    <div class="wx-head">
+      <h2>Weather – Tuổi Trẻ (Low / High)</h2>
+      <span id="wxCount" class="wx-badge">Loading…</span>
+    </div>
+
+    <table class="wx-table">
+      <thead>
+        <tr><th>#</th><th>City/Province</th><th>Low (°C)</th><th>High (°C)</th></tr>
+      </thead>
+      <tbody id="wxBody">
+        <tr><td colspan="4">Fetching weather…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+
+const PROVINCES = [
+{"value":"2347719","name":"An Giang"},{"value":"20070078","name":"Bình Dương"},
+{"value":"20070086","name":"Bình Phước"},{"value":"2347731","name":"Bình Thuận"},
+{"value":"2347730","name":"Bình Định"},{"value":"20070081","name":"Bạc Liêu"},
+{"value":"20070087","name":"Bắc Giang"},{"value":"20070084","name":"Bắc Kạn"},
+{"value":"20070088","name":"Bắc Ninh"},{"value":"2347703","name":"Bến Tre"},
+{"value":"2347704","name":"Cao Bằng"},{"value":"20070082","name":"Cà Mau"},
+{"value":"2347732","name":"Cần Thơ"},{"value":"28301718","name":"Điện Biên"},
+{"value":"20070085","name":"Đà Nẵng"},{"value":"1252375","name":"Đà Lạt"},
+{"value":"2347720","name":"Đắk Lắk"},{"value":"28301719","name":"Đắk Nông"},
+{"value":"2347721","name":"Đồng Nai"},{"value":"2347722","name":"Đồng Tháp"},
+{"value":"2347733","name":"Gia Lai"},{"value":"2347727","name":"Hà Nội"},
+{"value":"2347728","name":"TP. Hồ Chí Minh"},{"value":"2347734","name":"Hà Giang"},
+{"value":"2347741","name":"Hà Nam"},{"value":"2347736","name":"Hà Tĩnh"},
+{"value":"2347737","name":"Hòa Bình"},{"value":"20070079","name":"Hưng Yên"},
+{"value":"20070080","name":"Hải Dương"},{"value":"2347707","name":"Hải Phòng"},
+{"value":"28301720","name":"Hậu Giang"},{"value":"2347738","name":"Khánh Hòa"},
+{"value":"2347723","name":"Kiên Giang"},{"value":"20070076","name":"Kon Tum"},
+{"value":"2347708","name":"Lai Châu"},{"value":"2347710","name":"Long An"},
+{"value":"2347740","name":"Lào Cai"},{"value":"2347709","name":"Lâm Đồng"},
+{"value":"2347718","name":"Lạng Sơn"},{"value":"20070089","name":"Nam Định"},
+{"value":"2347742","name":"Nghệ An"},{"value":"2347743","name":"Ninh Bình"},
+{"value":"2347744","name":"Ninh Thuận"},{"value":"20070091","name":"Phú Thọ"},
+{"value":"2347745","name":"Phú Yên"},{"value":"2347746","name":"Quảng Bình"},
+{"value":"2347711","name":"Quảng Nam"},{"value":"20070077","name":"Quảng Ngãi"},
+{"value":"2347712","name":"Quảng Ninh"},{"value":"2347747","name":"Quảng Trị"},
+{"value":"2347748","name":"Sóc Trăng"},{"value":"2347713","name":"Sơn La"},
+{"value":"2347715","name":"Thanh Hóa"},{"value":"2347716","name":"Thái Bình"},
+{"value":"20070083","name":"Thái Nguyên"},{"value":"2347749","name":"Thừa Thiên Huế"},
+{"value":"2347717","name":"Tiền Giang"},{"value":"2347750","name":"Trà Vinh"},
+{"value":"2347751","name":"Tuyên Quang"},{"value":"2347714","name":"Tây Ninh"},
+{"value":"2347752","name":"Vĩnh Long"},{"value":"20070090","name":"Vĩnh Phúc"},
+{"value":"2347729","name":"Vũng Tàu"},{"value":"2347753","name":"Yên Bái"}
+];
+
+const proxyGet = u => "https://api.allorigins.win/get?url=" + encodeURIComponent(u);
+const cellRow = (i,n,lo,hi) => `<tr><td>${i}</td><td>${n}</td><td>${lo ?? "-"}</td><td>${hi ?? "-"}</td></tr>`;
+
+function pickLowHigh(json){
+  const info = json?.Data?.data?.datainfo;
+  return { low: info?.low ?? null, high: info?.high ?? null };
+}
+
+async function loadWeatherTable(){
+  const body  = document.getElementById('wxBody');
+  const badge = document.getElementById('wxCount');
+
+  const tasks = PROVINCES.map(async (p, idx) => {
+    const url = `https://utils3.cnnd.vn/ajax/weatherinfo/${p.value}.htm`;
+    try{
+      const r = await fetch(proxyGet(url));
+      const d = await r.json();               
+      const j = JSON.parse(d.contents || "{}");
+      const {low, high} = pickLowHigh(j);
+      return cellRow(idx+1, p.name, low, high);
+    }catch(_){
+      return cellRow(idx+1, p.name, null, null);
+    }
+  });
+
+  const rows = await Promise.all(tasks);
+  body.innerHTML = rows.join('');
+  badge.textContent = `${PROVINCES.length} provinces`;
+}
+
+loadWeatherTable();
+</script>
+</body>
+</html>

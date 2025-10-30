@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Đăng ký – Business Web Dev - Lê Thị Trúc Linh - K234111395 </title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f7f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 40px 20px;
+    }
+    .page {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      padding: 28px 32px;
+    }
+    h2 {
+      text-align: center;
+      color: #4f46e5;
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+    .hr {
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg,#4f46e5,#a78bfa);
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* Form */
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .input {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 15px;
+      transition: .2s;
+    }
+    .input:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129,140,248,.2);
+      outline: none;
+    }
+    .row-gap {
+      grid-column: 1 / span 3;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      font-weight: 600;
+      transition: .2s;
+      background: #fff;
+    }
+    .btn:hover { background: #f3f4f6; }
+    .btn-primary {
+      border-color: #818cf8;
+      background: linear-gradient(90deg, #4f46e5, #818cf8);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(79,70,229,.08);
+      font-size: 15px;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+    thead th {
+      background: linear-gradient(90deg,#4f46e5,#818cf8);
+      color: #fff;
+      font-weight: 600;
+    }
+    tbody tr:nth-child(even){ background:#f9fafb; }
+    tbody tr:hover{ background:#eef2ff; }
+
+    @media (max-width: 720px) {
+      .form-row { grid-template-columns: 1fr; }
+      .row-gap { grid-column: 1; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <h2>Register</h2>
+    <hr class="hr">
+
+    <form id="regForm" class="form-row" autocomplete="off">
+      <input class="input" name="name"  placeholder="Tên" required>
+      <input class="input" name="email" type="email" placeholder="Email" required>
+      <input class="input" name="content" placeholder="Nội dung" required>
+      <div class="row-gap">
+        <button class="btn btn-primary" type="submit">Đăng ký</button>
+        <button class="btn" type="reset">Nhập lại</button>
+      </div>
+    </form>
+
+    <h3 style="margin-top:14px">Danh sách đăng ký</h3>
+    <table class="table" id="regTable">
+      <thead><tr><th>#</th><th>Tên</th><th>Email</th><th>Nội dung</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const keyForm = 'bw04_regs';
+    let regs = JSON.parse(localStorage.getItem(keyForm) || '[]');
+    const tbody = document.querySelector('#regTable tbody');
+    const form = document.getElementById('regForm');
+
+    function renderRegs() {
+      tbody.innerHTML = regs.length
+        ? regs.map((r, i) =>
+          `<tr><td>${i + 1}</td><td>${r.name}</td><td>${r.email}</td><td>${r.content}</td></tr>`
+        ).join('')
+        : `<tr><td colspan="4" style="text-align:center;color:#64748b">Chưa có bản ghi</td></tr>`;
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      regs.push(Object.fromEntries(fd.entries()));
+      localStorage.setItem(keyForm, JSON.stringify(regs));
+      renderRegs();
+      form.reset();
+      form.name.focus();
+    });
+
+    renderRegs();
+  </script>
+</body>
+</html>

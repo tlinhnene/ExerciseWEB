@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Employees – Kiwi - Lê Thị Trúc Linh - K234111395</title>
+  <style>
+    :root{
+      --bg:#f6f8ff;
+      --panel:#ffffff;
+      --line:#e6e8f0;
+      --ink:#0f172a;
+      --muted:#6b7280;
+      --brand:#2563eb;
+      --brand-2:#7c3aed;
+      --yellow:#fff3b0;
+      --magenta:#ff5aa5;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg,#eef2ff,#f8fafc 40%,#f6f8ff);
+      color:var(--ink);
+      padding:24px;
+    }
+    .wrap{
+      max-width:1100px;margin:0 auto;display:grid;gap:20px;
+      grid-template-columns: 380px 1fr;
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(37,99,235,.06);
+      padding:18px;
+    }
+    h1{margin:0 0 8px;font-size:22px}
+    .sub{color:var(--muted);font-size:14px}
+
+    /* form */
+    .grid{display:grid;gap:10px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    label{font-size:13px;color:var(--muted)}
+    input{
+      width:100%;padding:10px 12px;border:1px solid var(--line);
+      border-radius:10px;background:#fff;font-size:14px;outline:none
+    }
+    input:focus{border-color:var(--brand)}
+    .actions{display:flex;gap:10px;margin-top:6px}
+    .btn{
+      border:0;border-radius:12px;padding:10px 14px;font-weight:600;
+      cursor:pointer
+    }
+    .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff}
+    .btn.muted{background:#f3f4f6;color:#111}
+
+    /* table */
+    table{width:100%;border-collapse:separate;border-spacing:0 10px}
+    thead th{
+      font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+      text-align:left;padding:0 12px 6px
+    }
+    tbody tr{
+      background:#fff;border:1px solid var(--line);border-radius:12px;
+      box-shadow:0 8px 18px rgba(2,6,23,.06)
+    }
+    tbody td{padding:12px}
+    tbody tr td:first-child{border-top-left-radius:12px;border-bottom-left-radius:12px}
+    tbody tr td:last-child{border-top-right-radius:12px;border-bottom-right-radius:12px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      font-weight:700;font-size:12px
+    }
+    .pill.yellow{background:var(--yellow)}
+    .pill.magenta{background:var(--magenta);color:#fff}
+    .row-yellow{outline:3px solid #ffe98a55}
+    .row-magenta{outline:3px solid #ff5aa533}
+
+    .tools{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+    .tools input{max-width:240px}
+    .link{color:var(--brand);font-weight:600;text-decoration:none}
+    .del{background:#fee2e2;color:#991b1b;border:0;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .count{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>New Employee</h1>
+      <div class="sub">Add an employee. Rows are colored by age rule.</div>
+      <form id="f" class="grid">
+        <div class="grid two">
+          <div>
+            <label for="id">ID</label>
+            <input id="id" name="id" required />
+          </div>
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" required />
+          </div>
+        </div>
+        <div class="grid two">
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" placeholder="xxxxxxxxxx"  />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+        </div>
+        <div>
+          <label for="age">Age</label>
+          <input id="age" name="age" type="number" min="16" max="80" required />
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Add employee</button>
+          <button class="btn muted" type="button" id="reset">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="tools">
+        <div class="count"><span id="total">0</span> employees</div>
+        <input id="q" placeholder="Search name/email/phone…" />
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:90px">ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th style="width:120px">Age</th>
+            <th style="width:110px">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+
+    let employees = JSON.parse(localStorage.getItem('employees_v2')||'[]');
+
+
+    const $ = sel => document.querySelector(sel);
+    const save = () => localStorage.setItem('employees_v2', JSON.stringify(employees));
+
+    function render(list = employees){
+      const tb = $('#tbody');
+      tb.innerHTML = '';
+      list.forEach((e, i) => {
+        const tr = document.createElement('tr');
+
+        const isYellow = e.age >= 18 && e.age <= 35;
+        tr.className = isYellow ? 'row-yellow' : 'row-magenta';
+        tr.innerHTML = `
+          <td>${e.id}</td>
+          <td>${e.name}</td>
+          <td>${e.phone}</td>
+          <td>${e.email}</td>
+          <td>
+            <span class="pill ${isYellow?'yellow':'magenta'}">${e.age}</span>
+          </td>
+          <td>
+            <button class="del" data-index="${i}">Delete</button>
+          </td>
+        `;
+        tb.appendChild(tr);
+      });
+      $('#total').textContent = list.length;
+    }
+
+    $('#f').addEventListener('submit', (ev)=>{
+      ev.preventDefault();
+      const id = $('#id').value.trim();
+      const name = $('#name').value.trim();
+      const phone = $('#phone').value.trim();
+      const email = $('#email').value.trim();
+      const age = parseInt($('#age').value,10);
+
+      if (employees.some(e => e.id === id)) {
+        alert('ID already exists.');
+        return;
+      }
+      const emp = {id, name, phone, email, age};
+      employees.push(emp);
+      save();
+      render();
+      ev.target.reset();
+      $('#id').focus();
+    });
+
+    $('#reset').onclick = ()=>$('#f').reset();
+
+
+    $('#tbody').addEventListener('click', (e)=>{
+      if(!e.target.matches('.del')) return;
+      const idx = +e.target.dataset.index;
+      const emp = employees[idx];
+      if(confirm(`Delete employee "${emp.name}"?`)){
+        employees.splice(idx,1);
+        save();
+        render();
+      }
+    });
+
+    $('#q').addEventListener('input', (e)=>{
+      const k = e.target.value.toLowerCase();
+      const list = employees.filter(x =>
+        [x.id,x.name,x.phone,x.email].some(v => String(v).toLowerCase().includes(k))
+      );
+      render(list);
+    });
+
+    // boot
+    render();
+  </script>
+</body>
+</html>

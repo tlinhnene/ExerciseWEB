@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login cùng tụi mình nha! - Lê Thị Trúc Linh - K234111395</title>
+  <style>
+    :root{
+      --bg1:#f6d5f7;
+      --bg2:#fbe8ef;
+      --card:#ffffffcc;
+      --text:#2a2333;
+      --muted:#6b6b7a;
+      --pri:#8b5cf6;
+      --pri-2:#f472b6;
+      --line:#eceaf3;
+      --radius:18px;
+      --shadow:0 20px 60px rgba(43,18,86,.18);
+      --focus:0 0 0 3px rgba(139,92,246,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #f8e0ff 0%, transparent 50%) no-repeat,
+        radial-gradient(900px 500px at 110% 20%, #ffd9e7 0%, transparent 60%) no-repeat,
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+    .login-card{
+      width:min(420px, 92vw);
+      background:var(--card);
+      backdrop-filter: blur(8px);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px 26px 24px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      position:relative;
+      animation: pop .45s ease;
+    }
+    @keyframes pop{from{transform:translateY(6px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+
+    .brand{
+      display:flex; align-items:center; gap:12px; margin-bottom:4px;
+    }
+    .brand img{
+      width:56px; height:56px; object-fit:contain;
+      border-radius:14px; background:#fff; border:1px solid var(--line);
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    }
+    .brand h2{
+      font-size:20px; line-height:1.2; margin:0;
+    }
+    .brand p{margin:2px 0 0; font-size:13px; color:var(--muted)}
+
+    .field{
+      display:grid; gap:8px; margin-top:6px;
+    }
+    label{font-size:13px; color:#463b5a}
+    .input{
+      display:flex; align-items:center; gap:10px;
+      border:1px solid var(--line); background:#fff;
+      border-radius:12px; padding:12px 14px;
+      transition:.18s ease; outline:none;
+      box-shadow: inset 0 0 0 0 rgba(0,0,0,0);
+    }
+    .input:focus-within{border-color:#dfd8ff; box-shadow:var(--focus)}
+    .input input{
+      border:none; outline:none; width:100%; font-size:15px; color:var(--text); background:transparent;
+    }
+    .toggle-pw{
+      border:none; background:#f6f3ff; color:#5b50a6;
+      padding:8px 10px; border-radius:8px; font-size:12px; cursor:pointer;
+    }
+
+    .aux{
+      display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:6px;
+      font-size:13px; color:var(--muted);
+    }
+    .aux a{color:#7c3aed; text-decoration:none}
+    .aux a:hover{text-decoration:underline}
+
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      background: linear-gradient(135deg, var(--pri), var(--pri-2));
+      color:#fff; padding:12px 16px; border-radius:12px; font-size:15px; font-weight:600;
+      margin-top:6px; transition: transform .05s ease;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn[aria-busy="true"]{opacity:.8; pointer-events:none}
+
+    #error-box{
+      display:none;
+      font-size:13px; color:#b42318;
+      background:#feeceb; border:1px solid #ffd2ce; padding:10px 12px; border-radius:10px;
+    }
+    .hint{font-size:12px; color:var(--muted); text-align:center}
+
+    .row{display:flex; align-items:center; gap:8px}
+    input[type="checkbox"]{width:16px; height:16px; accent-color:#805ad5}
+
+    :focus-visible{outline:var(--focus)}
+  </style>
+</head>
+<body>
+
+  <form name="myform" class="login-card" id="loginForm" autocomplete="on">
+    <div class="brand">
+      <img src="/images/cookie.png" alt="Avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22><rect width=%2256%22 height=%2256%22 rx=%2214%22 fill=%22%23fff%22/><text x=%2750%25%27 y=%2752%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-size=%2724%27>🍪</text></svg>';">
+      <div>
+        <h2>Login to visit our website</h2>
+        <p>Chào bạn quay lại nha</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="user_name">Username</label>
+      <div class="input"><input type="text" id="user_name" name="user_name" placeholder="nhập tên đăng nhập" autocomplete="username" required></div>
+    </div>
+
+    <div class="field">
+      <label for="user_password">Password</label>
+      <div class="input">
+        <input type="password" id="user_password" name="user_password" placeholder="••••••••" autocomplete="current-password" required>
+        <button class="toggle-pw" type="button" aria-pressed="false" id="togglePw">Hiện</button>
+      </div>
+    </div>
+
+    <div class="aux">
+      <label class="row" for="save_info">
+        <input type="checkbox" id="save_info" name="save_info"> Save Login Information
+      </label>
+      <a href="#" onclick="alert('Liên hệ admin để reset mật khẩu nha');return false;">Forgot password?</a>
+    </div>
+
+    <button class="btn" id="loginBtn" type="submit">Login</button>
+
+    <p id="error-box"> Sai tên đăng nhập hoặc mật khẩu</p>
+    <p class="hint">Tip Nhấn Enter để đăng nhập nhanh</p>
+  </form>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const userEl = document.getElementById('user_name');
+    const pwEl = document.getElementById('user_password');
+    const saveEl = document.getElementById('save_info');
+    const errEl = document.getElementById('error-box');
+    const btn = document.getElementById('loginBtn');
+    const togglePw = document.getElementById('togglePw');
+    (function preload(){
+      const saved = localStorage.getItem('saved_username');
+      if(saved){ userEl.value = saved; saveEl.checked = true; }
+    })();
+
+    togglePw.addEventListener('click', () => {
+      const isPwd = pwEl.type === 'password';
+      pwEl.type = isPwd ? 'text' : 'password';
+      togglePw.textContent = isPwd ? 'Ẩn' : 'Hiện';
+      togglePw.setAttribute('aria-pressed', String(isPwd));
+      pwEl.focus();
+    });
+
+    // Handle submit
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errEl.style.display = 'none';
+
+      const u = userEl.value.trim();
+      const p = pwEl.value;
+
+      if(!u || !p){
+        errEl.textContent = '⚠️ Vui lòng nhập đầy đủ Username và Password';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.setAttribute('aria-busy','true');
+      btn.textContent = 'Đang xử lý...';
+
+      setTimeout(() => {
+        const ok = (u === 'admin' && p === '123456') || (u.length >= 3 && p.length >= 6);
+        if(ok){
+          if(saveEl.checked){ localStorage.setItem('saved_username', u); }
+          else{ localStorage.removeItem('saved_username'); }
+     
+          btn.textContent = 'Thành công';
+          form.style.transform = 'scale(0.996)';
+          form.style.transition = 'transform .2s ease';
+       
+          window.location.href = '../index.html';
+        }else{
+          errEl.textContent = '❌ Sai tên đăng nhập hoặc mật khẩu';
+          errEl.style.display = 'block';
+          btn.removeAttribute('aria-busy');
+          btn.textContent = 'Login';
+          pwEl.focus();
+        }
+      }, 600);
+    });
+
+    form.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' && e.target.tagName !== 'TEXTAREA'){
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  </script>
+</body>
+</html>

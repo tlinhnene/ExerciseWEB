@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vietlott Jackpot - Lê Thị Trúc Linh - K234111395</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{margin:0;font:14px/1.5 system-ui,Segoe UI,Roboto,Arial;background:#f6f7fb;color:#0f172a;padding:20px}
+    .wrap{max-width:980px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:16px}
+    .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+    .row label{display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px solid #e5e7eb;border-radius:999px;cursor:pointer}
+    h1{margin:0 0 10px;font-size:18px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px;border-bottom:1px solid #eef0f4;text-align:left}
+    thead th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#475569;background:#f8fafc}
+    .nums{font-weight:700;letter-spacing:.5px}
+    .right{text-align:right}
+    .muted{color:#64748b}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Vietlott Jackpot</h1>
+    <div class="row">
+      <label><input type="radio" name="game" value="mega645" checked> Mega 6/45</label>
+      <label><input type="radio" name="game" value="power655"> Power 6/55</label>
+      <span id="status" class="muted" style="margin-left:auto">Ready</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:120px">Draw No.</th>
+          <th style="width:170px">Draw Date</th>
+          <th>Numbers</th>
+          <th style="width:160px" class="right">Jackpot (₫)</th>
+        </tr>
+      </thead>
+      <tbody id="rows"><tr><td colspan="4">Loading…</td></tr></tbody>
+    </table>
+  </div>
+
+<script>
+const API = "https://webapi.dantri.com.vn/lottery/get-vietlott-jack";
+const TRY = [
+  API,
+  "https://api.allorigins.win/raw?url=" + encodeURIComponent(API),
+  "https://api.codetabs.com/v1/proxy?quest=" + API,
+  "https://cors.isomorphic-git.org/" + API
+];
+const $rows = document.getElementById('rows');
+const $status = document.getElementById('status');
+
+document.querySelectorAll('input[name=game]').forEach(r =>
+  r.addEventListener('change', () => load(r.value))
+);
+
+async function fetchJSON(){
+  for(const url of TRY){
+    try{
+      const r = await fetch(url,{cache:"no-store"});
+      if(!r.ok) continue;
+      const t = await r.text();
+      return JSON.parse(t);
+    }catch{}
+  }
+  throw new Error("Fetch/CORS error");
+}
+
+function toVND(v){
+  const n = Number(String(v).replace(/[^\d.-]/g,""));
+  return Number.isFinite(n) ? n.toLocaleString("vi-VN") : (v||"-");
+}
+
+function normalize(data, game){
+  let arr = data?.data?.[game] || data?.[game] || [];
+  if (!Array.isArray(arr) && Array.isArray(data)) {
+    arr = data.filter(x => (x.type||x.product||"").toLowerCase().includes(game));
+  }
+  return arr.map(it=>{
+    const drawNo  = it.drawNo || it.period || it.id || it.drawid || "-";
+    const date    = it.openDate || it.drawDate || it.date || it.time || "-";
+
+    let nums = it.result || it.numbers || "";
+    if (Array.isArray(nums)) nums = nums.join(" ");
+    if (!nums) {
+      const ns = ['n1','n2','n3','n4','n5','n6','n7'].map(k=>it[k]).filter(Boolean);
+      nums = ns.join(" ");
+    }
+
+    if (game === "power655" && it.n7) nums = `${(nums||'').trim()} + ${it.n7}`;
+    const jackpot = it.jackpot || it.jackpot1 || it.prize || it.value || it.jackpot_value || "-";
+    return {drawNo,date,nums: String(nums).replace(/[,\s]+/g," "),jackpot};
+  });
+}
+
+async function load(game='mega645'){
+  $status.textContent = "Loading " + game + "…";
+  $rows.innerHTML = `<tr><td colspan="4">Loading…</td></tr>`;
+  try{
+    const data = await fetchJSON();
+    const list = normalize(data, game).slice(0, 20); 
+    if(!list.length){ $rows.innerHTML = `<tr><td colspan="4">No data</td></tr>`; $status.textContent="Empty"; return; }
+    $rows.innerHTML = list.map(x=>`
+      <tr>
+        <td>#${x.drawNo}</td>
+        <td>${x.date}</td>
+        <td class="nums">${x.nums || "-"}</td>
+        <td class="right">${toVND(x.jackpot)}</td>
+      </tr>`).join("");
+    $status.textContent = `Loaded ${list.length} rows`;
+  }catch(e){
+    $status.textContent = "Error";
+    $rows.innerHTML = `<tr><td colspan="4" style="color:#b91c1c">Không tải được dữ liệu API</td></tr>`;
+  }
+}
+
+// init
+load('mega645');
+</script>
+</body>
+</html>
